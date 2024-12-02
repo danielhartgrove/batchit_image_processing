@@ -1,7 +1,8 @@
 from PIL import Image
 import os
 from heic2png import HEIC2PNG
-
+import tkinter as tk
+from tkinter import filedialog, messagebox
 
 def convert_webp_png(path: str):
     webp_path = (path.replace("\"", "").replace("\'", ""))
@@ -54,40 +55,42 @@ def rename(file_path: str, newname: str):
     except OSError as error:
         print(f"Error renaming file: {error}")
 
+def add_file_path():
+    file_path = filedialog.askopenfilename()
+    if file_path:
+        file_list.insert(tk.END, file_path)
 
-if __name__ == '__main__':
-    queue = []
-    item = ""
-    print("Add to Queue (:Q to end):")
-    while item != ":Q":
-        item = input()
-        if item != ":Q":
-            queue.insert(0, item)
+def process_file(index):
+    file_path = file_list.get(index)
+    print(f"Processing file: {file_path}")
 
-    print("What would you like to do to the file(s)?")
-    print("1. Convert webp to png (WEBP)")
-    print("2. Convert heic to png (HEIC)")
-    print("3. Rename (RENAME)")
-    type = input()
-    if type == "WEBP":
-        print("Ok.")
-        while len(queue) != 0:
-            convert_webp_png(queue.pop(0))
-    elif type == "HEIC":
-        print("Ok.")
-        while len(queue) != 0:
-            convert_heic_png(queue.pop(0))
-    elif type == "RENAME":
-        print("Ok.")
-        print("What to rename file(s)", "to?")
-        rename_name = input()
-        temp = rename_name
-        count = 0
-        while len(queue) != 0:
-            path = queue.pop(0)
-            if count != 0:
-                rename_name = rename_name + "(" + str(count) + ")"
-            rename(path, rename_name)
-            rename_name = temp
-    else:
-        print("CHOICE DOES NOT EXIST")
+def remove_file(index):
+    file_list.delete(index)
+
+# Create the main window
+window = tk.Tk()
+window.title("File Path Manager")
+
+# Create a frame for the listbox
+listbox_frame = tk.LabelFrame(window, text="Files")
+listbox_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+# Create the listbox
+file_list = tk.Listbox(listbox_frame, height=10, width=30)
+file_list.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+# Create a frame for buttons
+button_frame = tk.LabelFrame(window, text="Functions")
+button_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=10, pady=10)
+
+# Create buttons
+add_button = tk.Button(button_frame, text="Add File", command=add_file_path)
+add_button.pack(pady=5)
+
+process_button = tk.Button(button_frame, text="Process", command=lambda: process_file(file_list.curselection()[0]))
+process_button.pack(pady=5)
+
+remove_button = tk.Button(button_frame, text="Remove", command=lambda: remove_file(file_list.curselection()[0]))
+remove_button.pack(pady=5)
+
+window.mainloop()
