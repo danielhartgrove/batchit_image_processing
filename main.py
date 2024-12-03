@@ -69,7 +69,7 @@ def remove_file(index):
 
 # Create the main window
 window = tk.Tk()
-window.title("File Path Manager")
+window.title("BatchIt!")
 
 # Create a frame for the listbox
 listbox_frame = tk.LabelFrame(window, text="Files")
@@ -85,12 +85,18 @@ button_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=10, pady=10)
 
 # Create buttons
 add_button = tk.Button(button_frame, text="Add File", command=add_file_path)
-add_button.pack(pady=5)
+add_button.pack(pady=5, padx=5)
 
-process_button = tk.Button(button_frame, text="Process", command=lambda: process_file(file_list.curselection()[0]))
-process_button.pack(pady=5)
+convert_button = tk.Button(button_frame, text="to PNG", command=lambda: convert_heic_png(file_list.curselection()[0]))
+convert_button.pack(pady=5, padx=5)
+
+rename_button = tk.Button(button_frame, text="Rename", command=lambda: rename_popup(file_list.curselection()[0]))
+rename_button.pack(pady=5, padx=5)
+
+threshold_button = tk.Button(button_frame, text="Threshold", command=lambda: threshold_popup(file_list.curselection()[0]))
+threshold_button.pack(pady=5, padx=5)
 
 remove_button = tk.Button(button_frame, text="Remove", command=lambda: remove_file(file_list.curselection()[0]))
-remove_button.pack(pady=5)
+remove_button.pack(pady=5, padx=5)
 
 window.mainloop()
